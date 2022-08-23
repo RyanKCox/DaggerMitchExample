@@ -12,7 +12,7 @@ class AuthViewModel @Inject constructor(
     private val authAPI: AuthAPI,
 ) : ViewModel(){
 
-    private val authUser = MediatorLiveData<User>()
+    private val authUser = MediatorLiveData<AuthStatus<User>>()
     init {
         Log.d("AuthViewModel","ViewModel Created")
         Log.d("AuthViewModel","AuthAPI - $authAPI")
@@ -23,12 +23,22 @@ class AuthViewModel @Inject constructor(
     fun observeUser() = authUser
 
     fun authenticateWithId(userId: Int) {
-        val source: LiveData<User> = LiveDataReactiveStreams.fromPublisher(
+
+        authUser.value = AuthStatus.Loading
+
+        val source: LiveData<AuthStatus<User>> = LiveDataReactiveStreams.fromPublisher(
             authAPI.getUser(userId)
+                .map {
+                    AuthStatus.Authenticated(it) as AuthStatus<User>
+                }
+                .onErrorReturn {
+                    AuthStatus.Error("Failed, User not in bounds of 1 to 10")
+                }
                 .subscribeOn(Schedulers.io()))
+
         authUser.addSource(source
-        ) { user ->
-            authUser.value = user
+        ) { authStatus ->
+            authUser.value = authStatus
             authUser.removeSource(source)
         }
     }
