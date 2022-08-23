@@ -1,10 +1,11 @@
-package com.revature.daggermitchexample
+package com.revature.daggermitchexample.ui.auth
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
-import android.widget.ImageView
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
+import com.revature.daggermitchexample.R
+import com.revature.daggermitchexample.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -14,10 +15,18 @@ class AuthActivity : DaggerAppCompatActivity() {
     lateinit var logo:Drawable
     @Inject
     lateinit var requestManager: RequestManager
+    @Inject
+    lateinit var providerFactory:ViewModelProviderFactory
+
+    private lateinit var viewModel:AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
+
+        viewModel = ViewModelProvider(
+            this,
+            providerFactory)[AuthViewModel::class.java]
 
         setLogo()
 
@@ -25,6 +34,6 @@ class AuthActivity : DaggerAppCompatActivity() {
     private fun setLogo(){
         requestManager
             .load(logo)
-            .into(findViewById<ImageView>(R.id.login_logo))
+            .into(findViewById(R.id.login_logo))
     }
 }
