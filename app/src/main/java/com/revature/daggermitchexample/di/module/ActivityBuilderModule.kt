@@ -5,6 +5,8 @@ import com.revature.daggermitchexample.di.module.auth.AuthViewModelsModule
 import com.revature.daggermitchexample.di.module.main.MainFragmentBuilderModule
 import com.revature.daggermitchexample.di.module.main.MainModule
 import com.revature.daggermitchexample.di.module.main.MainViewModelModule
+import com.revature.daggermitchexample.di.scope.AuthScope
+import com.revature.daggermitchexample.di.scope.MainScope
 import com.revature.daggermitchexample.ui.auth.AuthActivity
 import com.revature.daggermitchexample.ui.main.MainActivity
 import dagger.Module
@@ -17,12 +19,14 @@ abstract class ActivityBuilderModule{
      * Dagger Subcomponent creator using @ContributesAndroidInjector
      * for the AuthActivity Subcomponent
      */
+    @AuthScope
     @ContributesAndroidInjector(modules = [
         AuthViewModelsModule::class,
         AuthModule::class
     ])
     abstract fun contributeAuthActivity(): AuthActivity
 
+    @MainScope
     @ContributesAndroidInjector(modules = [
         MainFragmentBuilderModule::class,
         MainViewModelModule::class,
