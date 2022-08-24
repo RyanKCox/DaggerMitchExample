@@ -2,6 +2,7 @@ package com.revature.daggermitchexample.di.component
 
 import android.app.Application
 import com.revature.daggermitchexample.BaseApplication
+import com.revature.daggermitchexample.SessionManager
 import com.revature.daggermitchexample.di.module.ActivityBuilderModule
 import com.revature.daggermitchexample.di.module.AppModule
 import com.revature.daggermitchexample.di.module.ViewModelFactoryModule
@@ -24,6 +25,8 @@ import javax.inject.Singleton
     ViewModelFactoryModule::class
     ])
 interface AppComponent: AndroidInjector<BaseApplication> {
+
+    fun sessionManager():SessionManager
 
     @Component.Builder
     interface Builder{

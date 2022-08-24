@@ -2,6 +2,7 @@ package com.revature.daggermitchexample.ui.auth
 
 import android.util.Log
 import androidx.lifecycle.*
+import com.revature.daggermitchexample.SessionManager
 import com.revature.daggermitchexample.models.User
 import com.revature.daggermitchexample.network.auth.AuthAPI
 import io.reactivex.schedulers.Schedulers
@@ -16,18 +17,17 @@ import javax.inject.Inject
  */
 class AuthViewModel @Inject constructor(
     private val authAPI: AuthAPI,
+    private val sessionManager: SessionManager
 ) : ViewModel(){
-
-    // Livedata observer of the current user status. Contains the user if status is Authenticated
-    private val authUser = MediatorLiveData<AuthStatus<User>>()
 
     init {
         Log.d("AuthViewModel","ViewModel Created")
         Log.d("AuthViewModel","AuthAPI - $authAPI")
+        Log.d("AuthViewModel","SessionManager - $sessionManager")
     }
 
     //Provider for use in the AuthActivity
-    fun observeUser() = authUser
+    fun observeAuthState() = sessionManager.getAuthUser()
 
     /**
      * Attempts to load the user from the passed in user ID.
@@ -38,23 +38,21 @@ class AuthViewModel @Inject constructor(
      */
     fun authenticateWithId(userId: Int) {
 
-        authUser.value = AuthStatus.Loading
+        Log.d("AuthViewModel","Attempting Authenticating user:$userId")
 
-        val source: LiveData<AuthStatus<User>> = LiveDataReactiveStreams.fromPublisher(
-            authAPI.getUser(userId)
-                .map {
-                    AuthStatus.Authenticated(it) as AuthStatus<User>
-                }
-                .onErrorReturn {
-                    AuthStatus.Error("Failed, User not in bounds of 1 to 10")
-                }
-                .subscribeOn(Schedulers.io()))
+        sessionManager.authenticateWithID(queryUserID(userId))
+    }
 
-        authUser.addSource(source
-        ) { authStatus ->
-            authUser.value = authStatus
-            authUser.removeSource(source)
-        }
+    private fun queryUserID(userID:Int):LiveData<AuthStatus<User>>{
+        return  LiveDataReactiveStreams.fromPublisher(
+            authAPI.getUser(userID)
+                        .map {
+                            AuthStatus.Authenticated(it) as AuthStatus<User>
+                        }
+                        .onErrorReturn {
+                            AuthStatus.Error("Failed, User not in bounds of 1 to 10")
+                        }
+                        .subscribeOn(Schedulers.io()))
     }
 
 }

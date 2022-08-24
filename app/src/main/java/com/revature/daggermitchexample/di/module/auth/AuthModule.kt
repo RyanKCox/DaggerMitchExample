@@ -1,10 +1,9 @@
-package com.revature.daggermitchexample.di.auth
+package com.revature.daggermitchexample.di.module.auth
 
 import com.revature.daggermitchexample.network.auth.AuthAPI
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
-import retrofit2.create
 
 @Module
 class AuthModule {

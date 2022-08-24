@@ -3,4 +3,8 @@
     <string name="loginlogo">LoginLogo</string>
     <string name="user_id">User id</string>
     <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="username">UserName:\n</string>
+    <string name="email">Email:\n</string>
+    <string name="website">Website:\n</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.revature.daggermitchexample.di.auth
+package com.revature.daggermitchexample.di.module.auth
 
 import androidx.lifecycle.ViewModel
 import com.revature.daggermitchexample.di.ViewModelKey
