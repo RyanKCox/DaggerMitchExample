@@ -14,8 +14,12 @@ import com.revature.daggermitchexample.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
+/**
+ * Authentication Activity / Login Screen
+ */
 class AuthActivity : DaggerAppCompatActivity() {
 
+    //Dagger provided Injectables for displaying Glide images and setting up the viewmodel
     @Inject
     lateinit var logo:Drawable
     @Inject
@@ -31,6 +35,7 @@ class AuthActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
+        //Assign variables to their xml attributes
         userID = findViewById(R.id.user_id_input)
         progressBar = findViewById(R.id.progress_bar)
 
@@ -57,6 +62,10 @@ class AuthActivity : DaggerAppCompatActivity() {
             .load(logo)
             .into(findViewById(R.id.login_logo))
     }
+
+    /**
+     * Subscribes the the authUser from the viewmodel and displays based on it's status
+     */
     private fun subscribeObserver(){
         viewModel.observeUser()
             .observe(this
